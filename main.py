@@ -1,22 +1,27 @@
 import requests
 import json
 
-BASE_URL = "https://pokeapi.co"
+BASE_URL = "https://pokeapi.co/api/v1/pokemon/"
 
 
-def query_pokeapi(resource_url):
-    url = "{0}{1}".format(BASE_URL, resource_url)
+def get_pokemon():
+    pokemon = input("Please choose a pokemon:\n")
+    print(pokemon)
+    query_pokeapi(pokemon)
+
+
+def query_pokeapi(pokemon):
+    url = "{0}{1}".format(BASE_URL, pokemon)
     response = requests.get(url)
 
     if response.status_code == 200:
-        return json.loads(response.text)
-    return None
+        data = json.loads(response.text)
+        name = data["name"]
+        picture = data["sprites"]["other"]["dream_world"]["front_default"]
+        print(name)
+        print(picture)
+    else:
+        print("An error occurred querying API")
 
 
-charizard = query_pokeapi("/api/v1/pokemon/charizard/")
-
-sprite_uri = charizard["sprites"]["other"]["dream_world"]["front_default"]
-
-
-print(charizard["name"])
-print(sprite_uri)
+get_pokemon()
