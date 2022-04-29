@@ -5,9 +5,17 @@ BASE_URL = "https://pokeapi.co/api/v1/pokemon/"
 
 
 def get_pokemon():
-    pokemon = input("Please choose a pokemon:\n")
+    pokemon = input("Please choose a pokemon (name or ID):\n")
     print(pokemon)
-    query_pokeapi(pokemon)
+    # TODO: error handle - use regex to check if string is a number to parse id
+    if pokemon == "":
+        print("please try again!")
+        get_pokemon()
+    elif len(pokemon) > 11:
+        print("too many characters in the pokemon's name or id, please try again!")
+        get_pokemon()
+    else:
+        query_pokeapi(pokemon.lower())
 
 
 def query_pokeapi(pokemon):
@@ -16,12 +24,12 @@ def query_pokeapi(pokemon):
 
     if response.status_code == 200:
         data = json.loads(response.text)
-        name = data["name"]
+        name = str(data["name"])
         picture = data["sprites"]["other"]["dream_world"]["front_default"]
-        print(name)
+        print(name.title())
         print(picture)
     else:
-        print("An error occurred querying API")
+        print("Pokemon doesn't exist")
 
 
 get_pokemon()
